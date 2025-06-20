@@ -172,5 +172,12 @@ EXCEPTION
 WHEN OTHERS THEN
 RETURN 'Ocorreu um erro ao registrar a devolução: ' || SQLERRM; END;
 $$ LANGUAGE plpgsq
-
 Caminho: sql/dtl.sql
+
+Documentação (ABNT)
+Introdução
+Modelagem conceitual e lógica
+Scripts comentados
+Conclusão e referências
+Caminho: documentacao/biblioteca_bd.pdf
+
