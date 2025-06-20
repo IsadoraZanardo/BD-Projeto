@@ -1,4 +1,4 @@
-# 📚 Projeto Final: Banco de Dados Relacional
+# 📚 Projeto Final: Banco de Dados
 
 ## 🎯 Objetivo
 
@@ -107,3 +107,118 @@ CREATE TABLE empréstimo (
   biblioteca_id INT REFERENCES bibilioteca(id)
 );
 
+---
+
+### 📁 DML - *Data Manipulation Language*
+
+Local: `sql/dml.sql`
+
+-- Inserções
+INSERT INTO aluno (telefone, email, cpf, semestre, curso, foto, registro_ra, nome, id_aluno)
+VALUES ('(11)99999-0000', 'isazanardi@gmail.com', '11000000', 'semestre 2', 'Ads', 'fotoq1.jpg', 0000, 'Isadora', 09);
+
+INSERT INTO livro (genero, idioma, quantidade, status, edicao, ano, autor, patrimonio, id_livro)
+VALUES ('Romance', 'Português', 10, 'Disponível', '2ª', 2020, 'Machado de Assis', 'BR12345', 1);
+
+INSERT INTO bibilioteca (quant_livros, unidades, id_biblioteca)
+VALUES (1500, 'Campus Centro', 1);
+
+INSERT INTO faculdade (contato, endereco, cnpj, materias, alunos, funcionarios, cursos, campus, id_faculdade)
+VALUES ('(11) 4002-8922', 'Rua das Flores, 123 - São Paulo, SP', '12.345.678/0001-90', 35, 1200, 80, 10, 'Centro', 1);
+
+INSERT INTO emprestimo (cliente_id, codigo_id, biblioteca_id)
+VALUES (1, 1, 1);
+
+-- Atualizações
+UPDATE cliente
+SET telefone = '(11)98888-7777'
+WHERE cliente_id = 1;
+
+UPDATE livro
+SET quantidade_livro = 9
+WHERE codigo_id = 1;
+
+UPDATE biblioteca
+SET nome_campus = 'Campus Sul'
+WHERE id = 1;
+
+-- Exclusões
+DELETE FROM emprestimo WHERE emprestimo_id = 1;
+DELETE FROM cliente WHERE cliente_id = 1;
+DELETE FROM livro WHERE codigo_id = 1;
+DELETE FROM biblioteca WHERE id = 1;
+
+---
+
+### 📁 DQL - *Data Quey Language*
+
+Local: `sql/dql.sql`
+
+SELECT * FROM cliente;
+
+SELECT * FROM livro
+WHERE status_do_aluguel = 'Disponível';
+
+SELECT
+  e.emprestimo_id,
+  c.nome AS nome_cliente,
+  l.autor AS autor_livro,
+  b.nome_campus AS biblioteca
+FROM emprestimo e
+JOIN cliente c ON e.cliente_id = c.cliente_id
+JOIN livro l ON e.codigo_id = l.codigo_id
+JOIN bibilioteca b ON e.biblioteca_id = b.id;
+
+SELECT SUM(quantidade_livro) AS total_livros FROM livro;
+
+SELECT DISTINCT c.nome
+FROM cliente c
+JOIN emprestimo e ON c.cliente_id = e.cliente_id;
+
+SELECT c.nome, COUNT(e.emprestimo_id) AS livros_emprestados
+FROM cliente c
+JOIN emprestimo e ON c.cliente_id = e.cliente_id
+GROUP BY c.nome;
+
+---
+
+### 📁 DCL - *Data Control Language*
+
+Local: `sql/dcl.sql`
+
+-- Criação de usuários
+CREATE USER bibliotecario IDENTIFIED BY 'senha123';
+CREATE USER leitor IDENTIFIED BY 'senha456';
+
+-- Permissões
+GRANT SELECT, INSERT, UPDATE, DELETE ON livros TO bibliotecario;
+GRANT SELECT ON livros TO leitor;
+
+-- Revogação
+REVOKE DELETE ON livros FROM bibliotecario;
+
+-- Verificação
+SHOW GRANTS FOR bibliotecario;
+SHOW GRANTS FOR leitor;
+
+---
+
+### 📁 DTL - *Data Transaction Language*
+
+Local: `sql/dtl.sql`
+
+-- Função para registrar empréstimo
+CREATE OR REPLACE FUNCTION registrar_emprestimo(...)
+RETURNS TEXT AS $$
+BEGIN
+  -- lógica do empréstimo
+END;
+$$ LANGUAGE plpgsql;
+
+-- Função para registrar devolução
+CREATE OR REPLACE FUNCTION registrar_devolucao(...)
+RETURNS TEXT AS $$
+BEGIN
+  -- lógica da devolução
+END;
+$$ LANGUAGE plpgsql;
